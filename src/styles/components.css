@@ -1,0 +1,1585 @@
+/* ============================================================
+   CashX components
+   ============================================================ */
+
+/* ---------------- Step progress ---------------- */
+
+.cx-stepper {
+  /* The reference keeps the progress rail running left → right in every locale. */
+  direction: ltr;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 2px 2px 4px;
+}
+
+.cx-stepper__rail {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.cx-stepper__track {
+  position: absolute;
+  top: 50%;
+  translate: 0 -50%;
+  left: calc(100% / (2 * var(--cx-steps, 3)));
+  right: calc(100% / (2 * var(--cx-steps, 3)));
+  height: 2px;
+  border-radius: 2px;
+  background: var(--cx-border);
+}
+
+.cx-stepper__track--progress {
+  right: auto;
+  background: linear-gradient(90deg, #a97ef7 0%, #7b4be8 100%);
+}
+
+.cx-stepper__dot {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--cx-r-pill);
+  background: #f1eef8;
+  color: var(--cx-text-3);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.cx-stepper__item {
+  flex: 1 1 0;
+  display: flex;
+  justify-content: center;
+}
+
+.cx-stepper__dot--active {
+  background: var(--cx-grad-x);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(84, 32, 216, 0.35);
+}
+
+.cx-stepper__dot--done {
+  background: #ede4ff;
+  color: var(--cx-purple);
+}
+
+.cx-stepper__labels {
+  display: flex;
+}
+
+.cx-stepper__label {
+  flex: 1 1 0;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--cx-text-3);
+  text-align: center;
+  padding: 0 4px;
+  direction: inherit;
+}
+
+html[dir='rtl'] .cx-stepper__label {
+  direction: rtl;
+}
+
+.cx-stepper__label--active {
+  color: var(--cx-purple);
+  font-weight: 800;
+}
+
+/* In the Transfer flow the stepper sits on the dark header, where neither the
+   dim grey nor the primary purple clears 4.5:1. The Add Balance stepper sits on
+   the white panel and keeps the light-surface colours above. */
+.cx-header .cx-stepper__label {
+  color: var(--cx-on-dark-dim);
+}
+
+.cx-header .cx-stepper__label--active {
+  color: var(--cx-on-dark);
+}
+
+.cx-header .cx-stepper__dot {
+  background: rgba(255, 255, 255, 0.16);
+  color: var(--cx-on-dark);
+}
+
+/* ---------------- Section labels ---------------- */
+
+.cx-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--cx-text);
+}
+
+.cx-label--end {
+  justify-content: flex-end;
+}
+
+.cx-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cx-purple-bright);
+  flex: none;
+}
+
+.cx-sublabel {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--cx-text-2);
+}
+
+/* ---------------- Brand logo tiles ---------------- */
+
+.cx-logo {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex: none;
+  font-family: var(--cx-font-en);
+  line-height: 1;
+  user-select: none;
+}
+
+.cx-logo--sm {
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+}
+
+.cx-logo--xs {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+}
+
+.cx-logo--lg {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+}
+
+/* Every operator tile is the same white rounded square with the supplied
+   artwork inside, so five logos of five different aspect ratios and two
+   background treatments still read as one consistent set at every tile size.
+
+   The supplied files each carry a different amount of empty margin, so a plain
+   `object-fit: contain` would render them at five different apparent sizes —
+   the orange block filled barely 18% of its canvas and the Vodafone circle all
+   100% of its own. Rather than rewriting the assets, each one is measured once
+   and given a zoom that makes its *content* land in the same optical band:
+
+     brand      natural    content box   contain gives   zoom   apparent size
+     vodafone   348x348    348x348       1.000 x 1.000   0.72   72%
+     we         447x447    447x447       1.000 x 1.000   0.72   72%
+     etisalat   738x414    592x400       0.802 x 0.542   1.12   90% wide
+     orange     547x365    243x245       0.444 x 0.448   1.47   66%
+     instapay   447x447    283x179       0.633 x 0.400   1.35   85% wide
+
+   Every source is centred, so a plain scale keeps the artwork centred; the
+   overflow is the surrounding margin, which the tile clips. */
+.cx-logo--vodafone,
+.cx-logo--etisalat,
+.cx-logo--orange,
+.cx-logo--we,
+.cx-logo--instapay {
+  background: #fff;
+  box-shadow: inset 0 0 0 1px var(--cx-border);
+}
+
+/*
+   Each operator name is set below to the zoom that puts its *visible* mark at
+   the same height as the others (~30 px in a 46 px tile, ~20 px in a 30 px one).
+   The numbers come from measuring each file's own content box — the artwork
+   rather than the canvas it sits on:
+
+     brand       canvas     visible content          share
+     Vodafone    348×348    333×320 (circle)         0.96 × 0.92
+     Etisalat    738×414    592×400 (glyph)          0.80 × 0.97
+     Orange      547×365    243×244 (square)         0.44 × 0.67
+     WE          447×447    447×447 (circle, no pad) 1.00 × 1.00
+     InstaPay    447×447    283×179 (lockup)         0.63 × 0.40
+
+   Equalising on height rather than width is what makes a wide glyph, a circle
+   and a square read as one set. */
+.cx-logo--vodafone {
+  --cx-logo-zoom: 0.72;
+}
+
+.cx-logo--etisalat {
+  --cx-logo-zoom: 1.18;
+}
+
+.cx-logo--orange {
+  --cx-logo-zoom: 1.5;
+}
+
+.cx-logo--we {
+  --cx-logo-zoom: 0.67;
+}
+
+/* InstaPay is the one lockup the tile cannot show at full height — matching the
+   others' 30 px would need 47 px of width — so it is taken to the same edge
+   clearance as the widest of the others (Etisalat at 94.6% of the tile) instead.
+   Its wordmark is the part that pays for that, so the whole logo is always
+   visible rather than cropped down to the mark. */
+.cx-logo--instapay {
+  --cx-logo-zoom: 1.48;
+}
+
+.cx-logo__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: scale(var(--cx-logo-zoom, 1));
+  -webkit-user-drag: none;
+}
+
+.cx-logo--bank {
+  background: var(--cx-lilac);
+}
+
+.cx-logo--cashx {
+  background: linear-gradient(160deg, #3b1a86 0%, #1b0942 100%);
+}
+
+.cx-logo--cashx-lite {
+  background: #fff;
+}
+
+/* ---------------- Wallet selector ---------------- */
+
+.cx-wallets {
+  direction: ltr;
+  display: grid;
+  gap: 12px;
+}
+
+.cx-wallets--grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.cx-wallets--row {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.cx-wallet {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 104px;
+  padding: 12px 8px;
+  border-radius: var(--cx-r-md);
+  border: 1.5px solid var(--cx-border);
+  background: #fff;
+  box-shadow: var(--cx-shadow-card);
+  transition:
+    border-color var(--cx-dur-base) var(--cx-ease-out),
+    background-color var(--cx-dur-base) var(--cx-ease-out),
+    box-shadow var(--cx-dur-base) var(--cx-ease-out),
+    transform var(--cx-dur-press) var(--cx-ease-out);
+}
+
+.cx-wallet:hover {
+  border-color: var(--cx-border-strong);
+}
+
+.cx-wallet:active {
+  transform: scale(0.98);
+}
+
+.cx-wallet--selected {
+  border-color: var(--cx-purple);
+  background: #faf7ff;
+  box-shadow: 0 6px 20px rgba(84, 32, 216, 0.12);
+}
+
+.cx-wallet__name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--cx-text);
+  text-align: center;
+  line-height: 1.25;
+}
+
+.cx-wallet__check {
+  position: absolute;
+  top: 8px;
+  animation: cx-pop var(--cx-dur-base) var(--cx-ease-pop) both;
+  /* The wallet grids keep their left-to-right order, so the badge sits on the
+     right corner exactly like the reference screens. */
+  inset-inline-end: 8px;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--cx-r-pill);
+  background: var(--cx-purple);
+  color: #fff;
+}
+
+.cx-wallets--row .cx-wallet {
+  min-height: 96px;
+  gap: 7px;
+  padding: 10px 4px;
+}
+
+.cx-wallets--row .cx-wallet__name {
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+.cx-wallets--row .cx-wallet__check {
+  top: 5px;
+  inset-inline-end: 5px;
+  width: 17px;
+  height: 17px;
+}
+
+/* ---------------- Segmented control ---------------- */
+
+.cx-segment {
+  /* The reference keeps the option order left → right in every locale. */
+  direction: ltr;
+  display: flex;
+  border: 1px solid var(--cx-border);
+  border-radius: var(--cx-r-md);
+  background: #fff;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.cx-segment::-webkit-scrollbar {
+  display: none;
+}
+
+.cx-segment__item {
+  direction: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex: 1 1 auto;
+  min-height: 54px;
+  padding: 6px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--cx-text-2);
+  border-inline-start: 1px solid var(--cx-border);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.cx-segment__item:first-child {
+  border-inline-start: 0;
+}
+
+.cx-segment__item--active {
+  background: var(--cx-grad-action);
+  color: #fff;
+}
+
+.cx-segment__item--active .cx-segment__icon {
+  color: #fff;
+}
+
+.cx-segment__icon {
+  display: grid;
+  place-items: center;
+  color: var(--cx-text-2);
+}
+
+/* ---------------- Amount input ---------------- */
+
+.cx-amount__input {
+  font-variant-numeric: tabular-nums;
+}
+
+.cx-amount {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 62px;
+  padding: 0 12px;
+  border-radius: var(--cx-r-md);
+  border: 1.5px solid var(--cx-border);
+  background: #fff;
+  box-shadow: var(--cx-shadow-card);
+}
+
+.cx-amount--error {
+  border-color: #e04b4b;
+}
+
+/* The inputs themselves carry `outline: none`, so the wrapper has to show
+   keyboard focus or the field is invisible to a keyboard user. */
+.cx-amount:focus-within {
+  border-color: var(--cx-focus);
+  box-shadow: var(--cx-focus-halo);
+}
+
+.cx-inputwrap:focus-within {
+  border-color: var(--cx-focus);
+  box-shadow: var(--cx-focus-halo);
+}
+.cx-select:focus-visible {
+  outline: 2px solid var(--cx-focus);
+  outline-offset: 2px;
+}
+
+.cx-amount__value {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-start;
+  gap: 7px;
+}
+
+.cx-amount__input {
+  flex: 0 0 auto;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+  padding: 0;
+  text-align: start;
+  font-family: var(--cx-font-en);
+}
+
+.cx-amount__input::placeholder {
+  color: #c9c5d8;
+  font-weight: 700;
+}
+
+.cx-amount__currency {
+  flex: none;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--cx-purple);
+}
+
+.cx-amount__icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: var(--cx-lilac);
+  color: var(--cx-purple);
+  flex: none;
+}
+
+/* ---------------- Fields ---------------- */
+
+.cx-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cx-inputwrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 54px;
+  padding: 0 12px;
+  border-radius: var(--cx-r-md);
+  border: 1.5px solid var(--cx-border);
+  background: #fff;
+  box-shadow: var(--cx-shadow-card);
+}
+
+.cx-inputwrap--error {
+  border-color: #e04b4b;
+}
+
+.cx-inputwrap__icon {
+  display: grid;
+  place-items: center;
+  color: var(--cx-purple);
+  flex: none;
+}
+
+.cx-inputwrap__trail {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--cx-lilac);
+  color: var(--cx-purple);
+  flex: none;
+}
+
+.cx-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  padding: 0;
+}
+
+.cx-input--plain {
+  letter-spacing: 0;
+  font-weight: 600;
+  /* 16px is the threshold below which iOS Safari zooms the page on focus. The
+     viewport no longer blocks user scaling, so the fields have to clear it. */
+  font-size: 16px;
+}
+
+html[dir='rtl'] .cx-input--phone {
+  direction: ltr;
+  text-align: right;
+}
+
+html[dir='ltr'] .cx-input--phone {
+  text-align: left;
+}
+
+.cx-field__hint {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--cx-text-2);
+  padding-inline: 2px;
+}
+
+.cx-field__error {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #d0342c;
+  padding-inline: 2px;
+}
+
+/* ---------------- Quick amounts ---------------- */
+
+.cx-chips {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.cx-chip {
+  height: 42px;
+  border-radius: var(--cx-r-pill);
+  border: 1px solid var(--cx-border);
+  background: var(--cx-lilac);
+  color: var(--cx-text);
+  font-size: 13px;
+  font-weight: 700;
+  font-family: var(--cx-font-en);
+  letter-spacing: -0.2px;
+  transition:
+    background-color var(--cx-dur-base) var(--cx-ease-out),
+    color var(--cx-dur-fast) ease,
+    border-color var(--cx-dur-fast) ease,
+    box-shadow var(--cx-dur-base) var(--cx-ease-out),
+    transform var(--cx-dur-press) var(--cx-ease-out);
+}
+
+.cx-chip:active {
+  transform: scale(0.955);
+}
+
+.cx-chip:hover {
+  border-color: var(--cx-border-strong);
+}
+
+.cx-chip--active {
+  background: var(--cx-grad-action);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(84, 32, 216, 0.28);
+}
+
+/* ---------------- Summary card ---------------- */
+
+.cx-summary {
+  border-radius: var(--cx-r-md);
+  background: var(--cx-lilac);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cx-summary--plain {
+  background: #fff;
+  border: 1px solid var(--cx-border);
+  box-shadow: var(--cx-shadow-card);
+}
+
+.cx-summary__title {
+  font-size: 14.5px;
+  font-weight: 800;
+  text-align: start;
+}
+
+.cx-summary__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13.5px;
+}
+
+.cx-summary__key {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--cx-text-2);
+  font-weight: 600;
+}
+
+.cx-summary__val {
+  font-weight: 700;
+  color: var(--cx-text);
+  white-space: nowrap;
+}
+
+.cx-summary__val--purple {
+  color: var(--cx-purple);
+}
+
+.cx-summary__divider {
+  height: 1px;
+  border-top: 1px dashed var(--cx-border-strong);
+}
+
+.cx-summary__row--total {
+  font-size: 15px;
+}
+
+.cx-summary__row--total .cx-summary__key {
+  color: var(--cx-text);
+  font-weight: 800;
+}
+
+.cx-summary__row--total .cx-summary__val {
+  color: var(--cx-purple);
+  font-weight: 800;
+  font-size: 15.5px;
+}
+
+.cx-infobtn {
+  display: inline-grid;
+  place-items: center;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 1.4px solid currentColor;
+  font-size: 9.5px;
+  font-weight: 800;
+  font-family: var(--cx-font-en);
+  color: var(--cx-purple);
+  line-height: 1;
+  flex: none;
+}
+
+/* ---------------- Notices ---------------- */
+
+.cx-notice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--cx-r-md);
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.55;
+  text-align: start;
+}
+
+.cx-notice--lilac {
+  background: var(--cx-lilac);
+  color: #4c4866;
+}
+
+.cx-notice--green {
+  background: var(--cx-green-soft);
+  border: 1px solid var(--cx-green-line);
+  color: #33704b;
+}
+
+.cx-notice--dark {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--cx-on-dark-dim);
+}
+
+.cx-notice__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  color: var(--cx-purple);
+}
+
+.cx-notice--green .cx-notice__icon {
+  color: var(--cx-green-text);
+}
+
+.cx-notice__text {
+  flex: 1 1 auto;
+}
+
+/* ---------------- Buttons ---------------- */
+
+.cx-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 56px;
+  padding: 10px 58px;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 800;
+  text-align: center;
+  transition:
+    filter var(--cx-dur-fast) ease,
+    background-color var(--cx-dur-fast) ease,
+    box-shadow var(--cx-dur-base) var(--cx-ease-out),
+    transform var(--cx-dur-press) var(--cx-ease-out);
+}
+
+.cx-btn:active {
+  transform: translateY(1px) scale(0.985);
+}
+
+.cx-btn__lead,
+.cx-btn__trail {
+  position: absolute;
+  top: 50%;
+  translate: 0 -50%;
+  display: grid;
+  place-items: center;
+}
+
+.cx-btn__lead {
+  left: 9px;
+}
+
+.cx-btn__trail {
+  right: 9px;
+}
+
+.cx-btn__brand {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(160deg, rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.42));
+}
+
+.cx-btn__arrow {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--cx-r-pill);
+  background: #fff;
+  color: var(--cx-purple);
+}
+
+.cx-btn--primary {
+  background: var(--cx-grad-action);
+  color: #fff;
+  box-shadow: 0 12px 26px rgba(74, 23, 196, 0.32);
+}
+
+.cx-btn--primary:hover {
+  filter: brightness(1.06);
+}
+
+.cx-btn--primary:active {
+  box-shadow: 0 6px 14px rgba(74, 23, 196, 0.26);
+}
+
+.cx-btn--primary .cx-btn__arrow {
+  transition: transform var(--cx-dur-base) var(--cx-ease-pop);
+}
+
+.cx-btn--primary:hover .cx-btn__arrow {
+  transform: translateX(2px);
+}
+
+html[dir='rtl'] .cx-btn--primary:hover .cx-btn__arrow {
+  transform: translateX(-2px);
+}
+
+.cx-btn--secondary {
+  background: #fff;
+  border: 1.5px solid var(--cx-purple);
+  color: var(--cx-purple);
+}
+
+.cx-btn--secondary .cx-btn__arrow {
+  background: var(--cx-lilac);
+}
+
+.cx-btn--secondary:hover {
+  background: #faf7ff;
+}
+
+/* WhatsApp. A solid green rather than the brand's bright #25D366, because white
+   on that measures 2.2:1 — both stops here clear 5:1 with white text, and the
+   glyph carries the recognition instead. */
+.cx-btn--whatsapp {
+  background: linear-gradient(135deg, #0f7f4a 0%, #0a5e3f 100%);
+  color: #fff;
+  box-shadow: 0 10px 22px rgba(10, 94, 63, 0.28);
+}
+
+.cx-btn--whatsapp:hover:not([disabled]) {
+  filter: brightness(1.08);
+}
+
+.cx-btn--whatsapp:active:not([disabled]) {
+  box-shadow: 0 5px 12px rgba(10, 94, 63, 0.24);
+}
+
+.cx-btn--whatsapp[disabled] {
+  /* Keeps the label legible while the receipt renders. */
+  opacity: 0.85;
+}
+
+.cx-btn--block {
+  padding: 10px 16px;
+}
+
+.cx-btn--sm {
+  min-height: 48px;
+  font-size: 13.5px;
+  border-radius: var(--cx-r-md);
+  padding: 8px 12px;
+}
+
+.cx-btn[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.cx-btn__stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.cx-btn__sub {
+  font-size: 11.5px;
+  font-weight: 600;
+  opacity: 0.88;
+}
+
+.cx-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.cx-actions .cx-btn:active {
+  transform: translateY(1px) scale(0.97);
+}
+
+.cx-linkbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--cx-purple);
+}
+
+.cx-linkbtn:hover {
+  text-decoration: underline;
+}
+
+/* ---------------- Cards & detail rows ---------------- */
+
+.cx-card {
+  border-radius: var(--cx-r-md);
+  background: #fff;
+  border: 1px solid var(--cx-border);
+  box-shadow: var(--cx-shadow-card);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cx-card--lilac {
+  background: var(--cx-lilac);
+  border-color: transparent;
+}
+
+.cx-card--green {
+  background: var(--cx-green-soft);
+  border-color: var(--cx-green-line);
+}
+
+.cx-card--flush {
+  padding: 0;
+  overflow: hidden;
+}
+
+.cx-card__title {
+  font-size: 14.5px;
+  font-weight: 800;
+  text-align: start;
+}
+
+.cx-card__title--center {
+  text-align: center;
+}
+
+.cx-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.cx-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 0;
+  border-top: 1px dashed var(--cx-hairline);
+}
+
+.cx-row:first-child {
+  border-top: 0;
+}
+
+.cx-row__icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--cx-lilac);
+  color: var(--cx-purple);
+  flex: none;
+}
+
+.cx-row__key {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cx-text-2);
+}
+
+.cx-row__val {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--cx-text);
+  text-align: end;
+}
+
+.cx-row__val--green {
+  color: var(--cx-green-text);
+}
+
+.cx-row__val--purple {
+  color: var(--cx-purple);
+}
+
+.cx-row__val--strong {
+  font-size: 14.5px;
+  font-weight: 800;
+}
+
+.cx-row__val--mono {
+  font-family: var(--cx-font-en);
+  letter-spacing: -0.1px;
+}
+
+.cx-copybtn {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  background: var(--cx-lilac);
+  color: var(--cx-purple);
+  flex: none;
+}
+
+.cx-copybtn {
+  transition:
+    background-color var(--cx-dur-base) var(--cx-ease-out),
+    color var(--cx-dur-fast) ease,
+    transform var(--cx-dur-press) var(--cx-ease-out);
+}
+
+.cx-copybtn:active {
+  transform: scale(0.9);
+}
+
+.cx-copybtn--done {
+  background: var(--cx-green-soft);
+  color: var(--cx-green-text);
+  animation: cx-pop var(--cx-dur-base) var(--cx-ease-pop) both;
+}
+
+/* ---------------- Success panel ---------------- */
+
+.cx-success {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 18px 16px 20px;
+  border-radius: var(--cx-r-lg);
+  background: linear-gradient(180deg, #f7fdf9 0%, #ffffff 78%);
+  border: 1px solid var(--cx-green-line);
+  text-align: center;
+  overflow: hidden;
+}
+
+.cx-success__mark {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  margin: 4px 0 8px;
+}
+
+.cx-success__halo {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(21, 148, 71, 0.16) 0%, rgba(21, 148, 71, 0) 70%);
+}
+
+.cx-success__halo--pulse {
+  animation: cx-halo 900ms var(--cx-ease-out) 420ms both;
+}
+
+.cx-success__check {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  background: linear-gradient(160deg, #34b862 0%, #14803d 100%);
+  color: #fff;
+  box-shadow: 0 12px 26px rgba(21, 148, 71, 0.32);
+  animation: cx-pop 520ms var(--cx-ease-pop) both;
+}
+
+/* The tick itself draws itself in after the badge lands. */
+.cx-check-path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: cx-draw 460ms var(--cx-ease-out) 260ms both;
+}
+
+@keyframes cx-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+  62% {
+    opacity: 1;
+    transform: scale(1.07);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes cx-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cx-halo {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  45% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.cx-success__title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--cx-text);
+}
+
+.cx-success__sub {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cx-text-2);
+  line-height: 1.6;
+}
+
+.cx-success__amount {
+  color: var(--cx-green-text);
+  font-weight: 800;
+}
+
+.cx-success__title,
+.cx-success__sub {
+  animation: cx-enter var(--cx-dur-step) var(--cx-ease-out) both;
+}
+
+.cx-success__title {
+  animation-delay: 120ms;
+}
+
+.cx-success__sub {
+  animation-delay: 200ms;
+}
+
+/* Receipt rows reveal in sequence. */
+.cx-details .cx-row {
+  animation: cx-enter 260ms var(--cx-ease-out) both;
+}
+
+.cx-details .cx-row:nth-child(1) {
+  animation-delay: 40ms;
+}
+
+.cx-details .cx-row:nth-child(2) {
+  animation-delay: 80ms;
+}
+
+.cx-details .cx-row:nth-child(3) {
+  animation-delay: 120ms;
+}
+
+.cx-details .cx-row:nth-child(4) {
+  animation-delay: 160ms;
+}
+
+.cx-details .cx-row:nth-child(5) {
+  animation-delay: 200ms;
+}
+
+.cx-details .cx-row:nth-child(n + 6) {
+  animation-delay: 240ms;
+}
+
+.cx-balance {
+  width: 100%;
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: var(--cx-r-md);
+  background: #fff;
+  border: 1px solid var(--cx-border);
+  animation: cx-enter var(--cx-dur-step) var(--cx-ease-out) 280ms both;
+  box-shadow: var(--cx-shadow-card);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.cx-balance__label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--cx-text-2);
+}
+
+.cx-balance__value {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--cx-green-text);
+  font-family: var(--cx-font-en);
+  letter-spacing: -1px;
+  direction: ltr;
+}
+
+html[dir='rtl'] .cx-balance__value {
+  display: inline-block;
+}
+
+.cx-balance__currency {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--cx-green-text);
+}
+
+.cx-sparkles {
+  position: absolute;
+  top: 10px;
+  display: flex;
+  gap: 60px;
+  color: rgba(21, 148, 71, 0.35);
+  animation: cx-fade-in var(--cx-dur-slow) var(--cx-ease-out) 140ms both;
+}
+
+/* ---------------- Confirmation / result headline ---------------- */
+
+.cx-screenhead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 14px 16px;
+  border-radius: var(--cx-r-lg);
+  background: linear-gradient(180deg, #faf7ff 0%, #ffffff 80%);
+  border: 1px solid #efe9fb;
+  text-align: center;
+}
+
+.cx-screenhead .cx-success__title {
+  font-size: 18px;
+}
+
+/* Confirm screen headline: title with the shield tile at the inline end */
+.cx-confirmhead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 2px 2px 2px;
+}
+
+.cx-confirmhead__titles {
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: start;
+}
+
+.cx-confirmhead__title {
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.cx-confirmhead__sub {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cx-text-2);
+  margin-top: 2px;
+}
+
+.cx-confirmhead__tile {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: var(--cx-grad-action);
+  color: #fff;
+  flex: none;
+  box-shadow: 0 8px 20px rgba(84, 32, 216, 0.3);
+}
+
+.cx-screenhead--failed {
+  background: linear-gradient(180deg, #fdf5f4 0%, #ffffff 80%);
+  border-color: #f6d9d6;
+}
+
+/* ---------------- Route (source → destination) ---------------- */
+
+.cx-route {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.cx-route__card {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px;
+  border-radius: var(--cx-r-md);
+  border: 1px solid var(--cx-border);
+  background: #fff;
+  box-shadow: var(--cx-shadow-card);
+}
+
+.cx-route__titles {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: start;
+}
+
+.cx-route__caption {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--cx-text-2);
+}
+
+.cx-route__name {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--cx-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cx-route__arrow {
+  display: grid;
+  place-items: center;
+  align-self: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--cx-r-pill);
+  border: 1px solid var(--cx-border);
+  background: #fff;
+  color: var(--cx-purple);
+  flex: none;
+  box-shadow: var(--cx-shadow-card);
+}
+
+.cx-route--stack {
+  flex-direction: column;
+}
+
+.cx-route--stack .cx-route__arrow {
+  width: 34px;
+  height: 34px;
+}
+
+/* Route used inside an already bordered card (success receipt) */
+.cx-route--plain .cx-route__card {
+  border: 0;
+  box-shadow: none;
+  padding: 4px 0;
+}
+
+.cx-route--plain .cx-route__arrow {
+  width: 34px;
+  height: 34px;
+  box-shadow: none;
+}
+
+/* Direction-aware arrows */
+
+.cx-flip {
+  display: inline-grid;
+  place-items: center;
+}
+
+html[dir='rtl'] .cx-flip {
+  transform: scaleX(-1);
+}
+
+/* ---------------- Rating ---------------- */
+
+.cx-rating {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--cx-r-md);
+  background: var(--cx-lilac);
+  border: 1px solid #eae2ff;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.cx-rating__stars {
+  display: flex;
+  gap: 4px;
+}
+
+.cx-star {
+  display: grid;
+  place-items: center;
+  color: #b9aee0;
+  transition: color 0.15s ease, transform 0.12s ease;
+}
+
+.cx-star--on {
+  color: #f5a524;
+  animation: cx-pop 300ms var(--cx-ease-pop) both;
+}
+
+.cx-star:hover {
+  transform: scale(1.12);
+}
+
+.cx-star:active {
+  transform: scale(0.88);
+}
+
+/* ---------------- Demo badges ---------------- */
+
+.cx-demobadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: var(--cx-r-pill);
+  background: var(--cx-lilac);
+  color: var(--cx-purple);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+
+.cx-disclosure {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--cx-text-2);
+  text-align: center;
+  line-height: 1.5;
+}
+
+.cx-simtoggle {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--cx-text-2);
+  cursor: pointer;
+}
+
+.cx-switch {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  border-radius: var(--cx-r-pill);
+  background: #ded9ec;
+  flex: none;
+  transition: background 0.16s ease;
+}
+
+.cx-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(9, 5, 30, 0.3);
+  transition: transform 0.16s ease;
+}
+
+.cx-switch--on {
+  background: var(--cx-purple);
+}
+
+.cx-switch--on::after {
+  transform: translateX(16px);
+}
+
+html[dir='rtl'] .cx-switch::after {
+  left: auto;
+  right: 2px;
+}
+
+html[dir='rtl'] .cx-switch--on::after {
+  transform: translateX(-16px);
+}
+
+/* ---------------- Loading ---------------- */
+
+.cx-spinner {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  animation: cx-spin 0.7s linear infinite;
+}
+
+.cx-spinner--dark {
+  border-color: rgba(84, 32, 216, 0.25);
+  border-top-color: var(--cx-purple);
+}
+
+@keyframes cx-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.cx-processing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 34px 18px;
+  text-align: center;
+}
+
+.cx-processing__ring {
+  display: grid;
+  place-items: center;
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  background: var(--cx-lilac);
+}
+
+.cx-processing__title {
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.cx-processing__sub {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--cx-text-2);
+}
+
+.cx-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--cx-text-2);
+  font-size: 13px;
+  font-weight: 600;
+}

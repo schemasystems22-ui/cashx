@@ -1,0 +1,612 @@
+/* ============================================================
+   Home / Transactions / My Account — supporting screens
+   ============================================================ */
+
+.cx-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--cx-r-lg);
+  padding: 18px;
+  color: #fff;
+  background: var(--cx-grad-header);
+  box-shadow: 0 18px 34px rgba(9, 5, 30, 0.28);
+}
+
+.cx-hero__brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.cx-hero__label {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.cx-hero__amount {
+  font-size: 32px;
+  font-weight: 800;
+  font-family: var(--cx-font-en);
+  letter-spacing: -1px;
+  direction: ltr;
+  font-variant-numeric: tabular-nums;
+}
+
+.cx-hero__currency {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.cx-hero__actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.cx-hero__action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 46px;
+  border-radius: var(--cx-r-md);
+  font-size: 13px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+.cx-hero__action--primary {
+  background: #fff;
+  color: var(--cx-purple);
+  border-color: #fff;
+}
+
+.cx-hero__action:hover {
+  filter: brightness(1.08);
+}
+
+.cx-hero__glow {
+  position: absolute;
+  inset-inline-end: -60px;
+  top: -70px;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(192, 38, 245, 0.35) 0%, rgba(192, 38, 245, 0) 70%);
+}
+
+/* --------------- Transaction list --------------- */
+
+.cx-txlist {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cx-tx {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: var(--cx-r-md);
+  border: 1px solid var(--cx-border);
+  background: #fff;
+  box-shadow: var(--cx-shadow-card);
+  text-align: start;
+  transition:
+    border-color var(--cx-dur-fast) ease,
+    box-shadow var(--cx-dur-base) var(--cx-ease-out),
+    transform var(--cx-dur-press) var(--cx-ease-out);
+}
+
+.cx-tx:hover {
+  border-color: var(--cx-border-strong);
+}
+
+.cx-tx:active {
+  transform: scale(0.985);
+}
+
+/* Gentle staggered reveal for list items and receipt rows. */
+.cx-txlist > li {
+  animation: cx-enter var(--cx-dur-step) var(--cx-ease-out) both;
+}
+
+.cx-txlist > li:nth-child(2) {
+  animation-delay: 45ms;
+}
+
+.cx-txlist > li:nth-child(3) {
+  animation-delay: 90ms;
+}
+
+.cx-txlist > li:nth-child(n + 4) {
+  animation-delay: 130ms;
+}
+
+.cx-tx__main {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cx-tx__title {
+  font-size: 13.5px;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cx-tx__sub {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--cx-text-2);
+  font-family: var(--cx-font-en);
+  letter-spacing: -0.1px;
+}
+
+.cx-tx__side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex: none;
+}
+
+.cx-tx__amount {
+  font-size: 13.5px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.cx-tx__amount--in {
+  color: var(--cx-green-text);
+}
+
+.cx-tx__amount--out {
+  color: var(--cx-text);
+}
+
+.cx-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--cx-r-pill);
+  font-size: 10px;
+  font-weight: 800;
+  background: var(--cx-lilac);
+  color: var(--cx-purple);
+}
+
+.cx-status--completed {
+  background: var(--cx-green-soft);
+  color: var(--cx-green-text);
+}
+
+.cx-status--failed {
+  background: #fdeceb;
+  color: #c02a22;
+}
+
+.cx-status--processing {
+  background: #fff5e6;
+  color: #b46b00;
+}
+
+.cx-status--cancelled {
+  background: #f2f1f6;
+  color: var(--cx-text-2);
+}
+
+/* --------------- My Account --------------- */
+
+.cx-profile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border-radius: var(--cx-r-lg);
+  background: var(--cx-grad-header);
+  color: #fff;
+}
+
+.cx-profile__avatar {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--cx-grad-x);
+  font-size: 20px;
+  font-weight: 800;
+  flex: none;
+}
+
+.cx-profile__name {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.cx-profile__meta {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.72);
+  font-family: var(--cx-font-en);
+}
+
+.cx-setting {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 0;
+  border-top: 1px dashed var(--cx-hairline);
+  text-align: start;
+}
+
+.cx-setting:first-child {
+  border-top: 0;
+}
+
+.cx-setting__label {
+  flex: 1 1 auto;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.cx-setting__value {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--cx-text-2);
+}
+
+/* --------------- Language switcher --------------- */
+
+.cx-lang {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  padding: 4px;
+  border-radius: var(--cx-r-md);
+  background: var(--cx-lilac);
+}
+
+.cx-lang__btn {
+  height: 40px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--cx-text-2);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.cx-lang__btn--active {
+  background: #fff;
+  color: var(--cx-purple);
+  font-weight: 800;
+  box-shadow: 0 2px 8px rgba(23, 21, 46, 0.08);
+}
+
+.cx-lang--compact {
+  padding: 3px;
+  width: 148px;
+}
+
+.cx-lang--compact .cx-lang__btn {
+  height: 32px;
+  font-size: 11.5px;
+}
+
+/* --------------- Sheet / drawer --------------- */
+
+.cx-sheet-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  background: rgba(6, 3, 18, 0.55);
+  display: flex;
+  align-items: flex-end;
+  animation: cx-fade 0.18s ease;
+}
+
+.cx-sheet {
+  width: 100%;
+  max-height: 88%;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: var(--cx-r-xl) var(--cx-r-xl) 0 0;
+  padding: 18px var(--cx-pad) calc(20px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: cx-slide 0.22s ease;
+}
+
+.cx-sheet__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cx-sheet__title {
+  font-size: 17px;
+  font-weight: 800;
+}
+
+/* --------------- Receipt QR panel --------------- */
+
+.cx-qr {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px;
+  border-radius: var(--cx-r-lg);
+  background: #fff;
+  border: 1px solid var(--cx-border);
+  box-shadow: var(--cx-shadow-card);
+}
+
+.cx-qr__code {
+  flex: none;
+  display: grid;
+  place-items: center;
+  padding: 6px;
+  border-radius: var(--cx-r-md);
+  background: #fff;
+  border: 1px solid var(--cx-hairline);
+  line-height: 0;
+}
+
+.cx-qr__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.cx-qr__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--cx-text);
+}
+
+.cx-qr__caption {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--cx-text-2);
+}
+
+.cx-qr__id {
+  margin-top: 4px;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  color: var(--cx-purple);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------- Receipt export sheet --------------- */
+
+.cx-sheet__note {
+  margin-top: -6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--cx-text-2);
+}
+
+.cx-export__qr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 14px;
+  border-radius: var(--cx-r-lg);
+  background: var(--cx-lilac);
+  line-height: 0;
+}
+
+.cx-export__id {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  color: var(--cx-purple);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.4;
+}
+
+.cx-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cx-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--cx-r-md);
+  background: #fff;
+  border: 1px solid var(--cx-border);
+  text-align: start;
+  transition:
+    border-color var(--cx-dur-fast) ease,
+    background-color var(--cx-dur-fast) ease,
+    box-shadow var(--cx-dur-base) var(--cx-ease-out),
+    transform var(--cx-dur-press) var(--cx-ease-out);
+}
+
+.cx-option:hover:not(:disabled) {
+  border-color: #d8cdf5;
+  box-shadow: 0 6px 16px rgba(84, 32, 216, 0.1);
+}
+
+.cx-option:active:not(:disabled) {
+  transform: scale(var(--cx-press-scale));
+}
+
+.cx-option:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.cx-option__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--cx-r-sm);
+  background: var(--cx-lilac);
+  color: var(--cx-purple);
+}
+
+/* The send-on-WhatsApp row leads the sheet, so it is tinted to match the action. */
+.cx-option--whatsapp {
+  border-color: #cfe8dc;
+}
+
+.cx-option--whatsapp .cx-option__icon {
+  background: #e6f5ed;
+  color: var(--cx-green-text);
+}
+
+.cx-option--whatsapp .cx-option__trail {
+  color: var(--cx-green-text);
+}
+
+.cx-option__text {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.cx-option__label {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--cx-text);
+}
+
+.cx-option__hint {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--cx-text-2);
+}
+
+.cx-option__trail {
+  flex: none;
+  color: var(--cx-text-3);
+}
+
+.cx-export__busy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--cx-purple);
+}
+
+.cx-export__note {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--cx-text-3);
+  text-align: center;
+}
+
+/* Balance values get a subtle lift while the count-up runs. */
+.cx-counting {
+  animation: cx-count 420ms var(--cx-ease-out) both;
+}
+
+@keyframes cx-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes cx-slide {
+  from {
+    transform: translateY(18px);
+  }
+}
+
+@keyframes cx-toast-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 10px) scale(0.94);
+  }
+}
+
+@keyframes cx-count {
+  from {
+    opacity: 0.4;
+    transform: translateY(2px);
+  }
+}
+
+.cx-toast {
+  position: absolute;
+  left: 50%;
+  bottom: 84px;
+  transform: translateX(-50%);
+  animation: cx-toast-in var(--cx-dur-base) var(--cx-ease-pop) both;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border-radius: var(--cx-r-pill);
+  background: rgba(23, 21, 46, 0.94);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 10px 24px rgba(9, 5, 30, 0.35);
+  z-index: 30;
+}
+
+/* --------------- Header mini logo (wordmark) --------------- */
+
+.cx-wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  font-family: var(--cx-font-en);
+  font-size: 31px;
+  line-height: 1;
+}
+
+.cx-wordmark--sm {
+  font-size: 21px;
+}
+
+.cx-wordmark__x {
+  display: inline-grid;
+  place-items: center;
+  margin-inline-start: 1px;
+}

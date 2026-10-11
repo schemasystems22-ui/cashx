@@ -1,0 +1,87 @@
+/* ============================================================
+   CashX design tokens
+   Values sampled / estimated from the supplied reference screens.
+   ============================================================ */
+
+:root {
+  /* ---- Brand palette ---- */
+  --cx-deep: #09051e; /* page background outside the app frame */
+  --cx-header-top: #170837; /* dark purple header, top */
+  --cx-header-bottom: #0b0424; /* dark purple header, bottom */
+  --cx-panel: #ffffff; /* white content surface */
+  --cx-purple: #5420d8; /* primary purple */
+  --cx-purple-strong: #4a17c4;
+  --cx-purple-bright: #792cf0; /* bright purple */
+  --cx-magenta: #c026f5; /* X magenta */
+  --cx-lilac: #f4eeff; /* pale purple surface */
+  --cx-lilac-soft: #faf7ff;
+  --cx-green: #159447; /* success green (marks, halos, fills) */
+  /* Success green needs a darker sibling for *text*: #159447 only reaches
+     3.9:1 on white, so values set in green use this instead (5.4:1). The
+     decorative green above stays exactly as the reference shows it. */
+  --cx-green-text: #0f7a39;
+  --cx-green-soft: #f1fbf4;
+  --cx-green-line: #d6f0de;
+
+  /* ---- Text ----
+     Contrast checked against white, the lilac surface (#f4eeff) and the
+     stepper's inactive dot (#f1eef8): every level clears WCAG AA (4.5:1) on
+     all three. The dimmest level used to sit at 2.5:1, which is unreadable. */
+  --cx-text: #17152e; /* 17.8:1 */
+  --cx-text-2: #5f5c73; /* 6.4:1 white · 5.7:1 lilac */
+  --cx-text-3: #6b6880; /* 5.4:1 white · 4.7:1 lilac */
+  --cx-on-dark: #ffffff;
+  --cx-on-dark-dim: #b9b1d8;
+
+  /* ---- Lines & shadows ---- */
+  --cx-border: #e8e5ef;
+  --cx-border-strong: #d9d3ea;
+  --cx-hairline: #f0edf6;
+  --cx-shadow-card: 0 1px 2px rgba(23, 21, 46, 0.04), 0 6px 18px rgba(23, 21, 46, 0.04);
+  --cx-shadow-panel: 0 -10px 30px rgba(9, 5, 30, 0.18);
+  --cx-shadow-pop: 0 10px 30px rgba(84, 32, 216, 0.35);
+
+  /* ---- Gradients ---- */
+  --cx-grad-action: linear-gradient(120deg, #7a2cf0 0%, #5420d8 48%, #43179f 100%);
+  --cx-grad-header: radial-gradient(120% 80% at 88% -10%, rgba(84, 32, 216, 0.5) 0%, rgba(84, 32, 216, 0) 60%),
+    radial-gradient(90% 70% at 6% 0%, rgba(121, 44, 240, 0.22) 0%, rgba(121, 44, 240, 0) 62%),
+    linear-gradient(180deg, var(--cx-header-top) 0%, var(--cx-header-bottom) 100%);
+  --cx-grad-x: linear-gradient(135deg, #b060ff 0%, #8b2ff0 45%, #5f1fd6 100%);
+
+  /* ---- Radii ---- */
+  --cx-r-xs: 8px;
+  --cx-r-sm: 10px;
+  --cx-r-md: 14px;
+  --cx-r-lg: 18px;
+  --cx-r-xl: 22px;
+  --cx-r-pill: 999px;
+
+  /* ---- Motion ---- */
+  --cx-dur-press: 110ms;
+  --cx-dur-fast: 160ms;
+  --cx-dur-base: 220ms;
+  --cx-dur-step: 320ms;
+  --cx-dur-slow: 520ms;
+  --cx-ease-out: cubic-bezier(0.22, 0.9, 0.3, 1);
+  --cx-ease-pop: cubic-bezier(0.22, 1.28, 0.4, 1);
+  --cx-press-scale: 0.972;
+
+  /* ---- Focus ---- */
+  --cx-focus: #792cf0; /* focus ring on light surfaces */
+  --cx-focus-on-dark: #ffffff; /* focus ring inside the dark header */
+  --cx-focus-halo: 0 0 0 3px rgba(121, 44, 240, 0.24);
+
+  /* ---- Layout ---- */
+  --cx-frame-w: 414px;
+  --cx-pad: 20px; /* horizontal screen padding */
+  --cx-header-pad: 16px;
+
+  /* ---- Type ---- */
+  --cx-font-ar: 'Cairo', 'Tajawal', 'Segoe UI', system-ui, sans-serif;
+  --cx-font-en: 'Inter', 'Cairo', 'Segoe UI', system-ui, sans-serif;
+  --cx-font: var(--cx-font-en);
+}
+
+html[lang='ar'] {
+  --cx-font: var(--cx-font-ar);
+}
