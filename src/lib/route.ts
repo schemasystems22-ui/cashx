@@ -27,7 +27,7 @@ export function restorableStep(step: FlowStep): FlowStep {
   return step > MAX_RESTORABLE_STEP ? MAX_RESTORABLE_STEP : step;
 }
 
-export const DEFAULT_LANG: Lang = 'ar';
+export const DEFAULT_LANG: Lang = 'en';
 
 /* ------------------------------------------------------------------ */
 /* Names                                                              */

@@ -2,7 +2,18 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
+/** `/` locally. GitHub Pages sets `VITE_BASE=/cashx/` so assets stay on the project site. */
+function siteBase(): string {
+  const raw = (process.env.VITE_BASE || '/').trim();
+  if (raw === '' || raw === '/') return '/';
+  const withSlash = raw.endsWith('/') ? raw : `${raw}/`;
+  return withSlash.startsWith('/') ? withSlash : `/${withSlash}`;
+}
+
+const base = siteBase();
+
 export default defineConfig({
+  base,
   plugins: [
     react(),
     /*
@@ -18,15 +29,15 @@ export default defineConfig({
       registerType: 'autoUpdate',
       injectRegister: 'auto',
       manifest: {
-        id: '/',
-        name: 'CashX — تحويل الأموال',
+        id: base,
+        name: 'CashX — Money transfer',
         short_name: 'CashX',
         description:
           'CashX demo: send money from any wallet to any wallet. Arabic and English. Simulated only — no real payments.',
-        lang: 'ar',
-        dir: 'rtl',
-        start_url: '/',
-        scope: '/',
+        lang: 'en',
+        dir: 'ltr',
+        start_url: base,
+        scope: base,
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#09051E',
@@ -47,13 +58,13 @@ export default defineConfig({
           {
             name: 'تحويل / Transfer',
             short_name: 'Transfer',
-            url: '/?screen=transfer&step=1',
+            url: `${base}?screen=transfer&step=1`,
             icons: [{ src: 'assets/icons/icon-192.png', sizes: '192x192' }],
           },
           {
             name: 'إضافة رصيد / Add Balance',
             short_name: 'Add Balance',
-            url: '/?screen=addBalance&step=1',
+            url: `${base}?screen=addBalance&step=1`,
             icons: [{ src: 'assets/icons/icon-192.png', sizes: '192x192' }],
           },
         ],
@@ -67,7 +78,7 @@ export default defineConfig({
         // app icon is only an asset for regenerating them, never fetched at run
         // time, so there is nothing to gain by shipping it to the cache.
         globIgnores: ['**/assets/icons/*.png', '**/assets/cashx-app-icon.jpg'],
-        navigateFallback: '/index.html',
+        navigateFallback: `${base}index.html`,
         cleanupOutdatedCaches: true,
         clientsClaim: true,
         runtimeCaching: [
